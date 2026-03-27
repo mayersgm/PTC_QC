@@ -1,0 +1,62 @@
+[
+  {
+    "page": 4,
+    "uri": "https://tera-digital.com/products/d6100-2d-wireless-barcode-scanner-with-stand",
+    "rect": [
+      324.20599365234375,
+      240.78900146484375,
+      451.2669982910156,
+      255.927001953125
+    ]
+  },
+  {
+    "page": 10,
+    "uri": "https://docs.google.com/spreadsheets/d/10I7u4FrWQXx4R3NOPhapa5DsjlLhDk9keJTLW0Wgq5A/edit?gid=0#gid=0",
+    "rect": [
+      249.2100067138672,
+      250.4730224609375,
+      307.0469970703125,
+      263.093017578125
+    ]
+  },
+  {
+    "page": 11,
+    "uri": "https://docs.google.com/spreadsheets/d/10I7u4FrWQXx4R3NOPhapa5DsjlLhDk9keJTLW0Wgq5A/edit?gid=0#gid=0",
+    "rect": [
+      249.2100067138672,
+      484.3690185546875,
+      307.0469970703125,
+      496.9880065917969
+    ]
+  },
+  {
+    "page": 13,
+    "uri": "https://dune-daq-sw.readthedocs.io/en/latest/",
+    "rect": [
+      248.3719940185547,
+      104.59100341796875,
+      271.82598876953125,
+      117.5419921875
+    ]
+  },
+  {
+    "page": 13,
+    "uri": "https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-buildtools/",
+    "rect": [
+      436.218994140625,
+      104.59100341796875,
+      459.6719970703125,
+      117.5419921875
+    ]
+  },
+  {
+    "page": 13,
+    "uri": "https://pdts-fw.web.cern.ch/pdts-fw/index.php?p=tags%2Fnocdr_integration%2Fb0%2Fpipeline4286375&view=ouroboros_pc053d_nocdr-integration-b0_sha-01d4e48e_runner-slu9p8x4-project-19909-concurrent-1_220727_1123.tgz",
+    "rect": [
+      430.5119934082031,
+      707.8740234375,
+      453.9649963378906,
+      720.8250122070312
+    ]
+  }
+]

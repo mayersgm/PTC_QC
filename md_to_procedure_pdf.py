@@ -24,8 +24,8 @@ from reportlab.platypus import (
 from reportlab.platypus.tableofcontents import TableOfContents
 
 
-SRC = Path("PTC_QC_Procedures_v1.1_novice.md")
-DST = Path("PTC_QC_Procedures_v1.1_novice.pdf")
+SRC = Path("PTC_QC_Procedures_v1.1_beginner.md")
+DST = Path("PTC_QC_Procedures_v1.1_beginner.pdf")
 
 
 def build_styles():
@@ -225,7 +225,7 @@ def main():
         rightMargin=0.85 * inch,
         topMargin=0.85 * inch,
         bottomMargin=0.85 * inch,
-        title="PTC QC Procedures (Novice)",
+        title="PTC QC Procedures (Beginner)",
         author="UPenn Electronics QC Team",
     )
 
@@ -237,7 +237,7 @@ def main():
             [Paragraph("PTC Quality Control Test Setup", styles["h1"])],
             [Paragraph("&amp; Quality Control Procedure", styles["h2"])],
             [Paragraph("Beginner-Friendly Edition", styles["h3"])],
-            [Paragraph("Version v1.1 novice rewrite", styles["body"])],
+            [Paragraph("Version v1.1 beginner rewrite", styles["body"])],
             [Paragraph(f"Generated {datetime.now().strftime('%Y-%m-%d')}", styles["body"])],
         ],
         colWidths=[6.8 * inch],
