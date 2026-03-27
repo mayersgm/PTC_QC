@@ -108,11 +108,60 @@ class ProcedureDocTemplate(SimpleDocTemplate):
             self._headings.append((level, text, self.page))
 
 
+def _md_split_table_row(line: str) -> list[str] | None:
+    line = line.strip()
+    if not line.startswith("|"):
+        return None
+    return [c.strip() for c in line.strip("|").split("|")]
+
+
+def _md_is_table_separator_row(line: str) -> bool:
+    cells = _md_split_table_row(line)
+    if not cells or len(cells) < 2:
+        return False
+    for c in cells:
+        if not c.strip():
+            continue
+        if not re.match(r"^:?-+:?$", c.strip()):
+            return False
+    return True
+
+
+def _md_table_to_flowable(rows: list[list[str]], styles) -> Table:
+    def esc(s: str) -> str:
+        t = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        return re.sub(r"`([^`]+)`", r"<font name='Courier'>\1</font>", t)
+
+    ncols = max(len(r) for r in rows)
+    data = []
+    for row in rows:
+        padded = row + [""] * (ncols - len(row))
+        data.append([Paragraph(esc(c), styles["body"]) for c in padded[:ncols]])
+    col_w = (6.5 * inch) / ncols
+    tbl = Table(data, colWidths=[col_w] * ncols, repeatRows=1)
+    tbl.setStyle(
+        TableStyle(
+            [
+                ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#cccccc")),
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e8e8e8")),
+                ("FONTNAME", (0, 0), (-1, 0), "Times-Bold"),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 4),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+                ("TOPPADDING", (0, 0), (-1, -1), 3),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+            ]
+        )
+    )
+    return tbl
+
+
 def parse_markdown(lines, styles):
     story = []
     bullets = []
     code_mode = False
     code_buf = []
+    lines = [ln.rstrip("\n") for ln in lines]
 
     def flush_bullets():
         nonlocal bullets
@@ -136,8 +185,9 @@ def parse_markdown(lines, styles):
             story.append(Preformatted("\n".join(code_buf), styles["code"]))
             code_buf = []
 
-    for raw in lines:
-        line = raw.rstrip("\n")
+    i = 0
+    while i < len(lines):
+        line = lines[i]
         stripped = line.strip()
 
         if stripped.startswith("```"):
@@ -147,10 +197,12 @@ def parse_markdown(lines, styles):
             else:
                 flush_bullets()
                 code_mode = True
+            i += 1
             continue
 
         if code_mode:
             code_buf.append(line)
+            i += 1
             continue
 
         if stripped == "---":
@@ -158,6 +210,27 @@ def parse_markdown(lines, styles):
             story.append(Spacer(1, 6))
             story.append(HRFlowable(width="100%", thickness=0.7, color=colors.HexColor("#777777")))
             story.append(Spacer(1, 8))
+            i += 1
+            continue
+
+        if stripped.startswith("|") and i + 1 < len(lines) and _md_is_table_separator_row(lines[i + 1]):
+            flush_bullets()
+            header = _md_split_table_row(stripped)
+            if not header:
+                i += 1
+                continue
+            i += 2
+            table_rows = [header]
+            while i < len(lines) and lines[i].strip().startswith("|"):
+                if _md_is_table_separator_row(lines[i]):
+                    i += 1
+                    continue
+                row = _md_split_table_row(lines[i])
+                if row:
+                    table_rows.append(row)
+                i += 1
+            story.append(_md_table_to_flowable(table_rows, styles))
+            story.append(Spacer(1, 6))
             continue
 
         h1 = re.match(r"^#\s+(.+)", stripped)
@@ -176,26 +249,31 @@ def parse_markdown(lines, styles):
                 p = Paragraph(txt, styles["h3"])
                 p._toc_level = 2
             story.append(p)
+            i += 1
             continue
 
         if re.match(r"^-\s+.+", stripped):
             bullets.append(re.sub(r"^-\s+", "", stripped))
+            i += 1
             continue
 
         if re.match(r"^\d+\.\s+.+", stripped):
             flush_bullets()
             story.append(Paragraph(stripped, styles["body"]))
+            i += 1
             continue
 
         if not stripped:
             flush_bullets()
             story.append(Spacer(1, 4))
+            i += 1
             continue
 
         flush_bullets()
         body_text = stripped.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
         body_text = re.sub(r"`([^`]+)`", r"<font name='Courier'>\1</font>", body_text)
         story.append(Paragraph(body_text, styles["body"]))
+        i += 1
 
     flush_bullets()
     flush_code()

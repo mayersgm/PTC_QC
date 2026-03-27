@@ -164,6 +164,29 @@ def wrap_html(body: str) -> str:
       background: #fafafa;
       padding: 6px;
     }}
+    .page table {{
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px;
+      font-size: 0.92rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }}
+    .page thead th {{
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 600;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+    }}
+    .page td {{
+      padding: 7px 10px;
+      border: 1px solid #e2e8f0;
+      vertical-align: top;
+    }}
+    .page tbody tr:nth-child(even) td {{
+      background: #fafbfc;
+    }}
     p code, li code {{
       background: #eef2ff;
       border: 1px solid #c7d2fe;
@@ -353,6 +376,7 @@ def main():
         raise FileNotFoundError(f"Input markdown not found: {SRC}")
 
     md = MarkdownIt("commonmark", {"html": False, "linkify": True, "typographer": True})
+    md.enable("table")
     text = SRC.read_text(encoding="utf-8")
     rendered = md.render(text)
     rendered = add_copy_buttons(rendered)

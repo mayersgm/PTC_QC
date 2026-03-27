@@ -30,6 +30,16 @@ You will:
 - Turn power **off** before connecting/disconnecting cables unless a step explicitly says otherwise.
 - If expected behavior is missing (LEDs, current draw, boot messages), stop and ask a UPenn electronics engineer.
 
+**Table 3 — Personal protective equipment (PPE) for tester** (same as official v1.1 PDF):
+
+| Code | Name | Notes |
+| --- | --- | --- |
+| 301 | Long Pants | |
+| 302 | Long Sleeve Top | |
+| 303 | Closed Toe Shoes | |
+| 304 | ESD-safe gloves or Latex gloves | While plugging/unplugging newly assembled PTCs into QC board |
+| 305 | Antistatic Wrist Strap | Connect to ESD monitoring while handling hardware |
+
 **PPE (reference photo from the official v1.1 procedure):**
 
 ![Figure 5 — PPE components](assets/pdf_v1.1/page09_img005.png)
@@ -79,14 +89,37 @@ On the Linux machine, open Terminal.
 
 ## 4) Equipment Checklist
 
-Confirm all items are present before testing:
+Confirm all items are present before testing. The tables below match **Tables 1–2** in the official v1.1 PDF.
 
-- Visual inspection tools: camera, microscope, barcode/QR scanner
-- QC station hardware: QC board, power supplies (24V and 48V), oscilloscope, DVM
-- Network hardware: switch, media converters, Ethernet cables, SFP modules, fibers
-- Computers: Linux machine and Windows machine
-- Programming tools: SD writer, Infineon XMC Link
-- PPE: required ESD-safe attire and wrist strap
+### Table 1 — Visual inspection components
+
+| Code | Name | Notes |
+| --- | --- | --- |
+| 101 | Digital camera capable of 12MP | For taking high resolution photographs of both sides of assembled boards |
+| 102 | Microscope and camera | For reception checkout of defects in front panels and bare PCBs |
+| 103 | Code Scanner | Tera 1D & 2D Scanner with base and bluetooth dongle, for entering assembled PCBs into DUNE HWDB |
+
+### Table 2 — QC board test station
+
+| Code | Name | Notes |
+| --- | --- | --- |
+| 201 | QC test board | Main test structure, with strain relief structure for cabling |
+| 202 | 24V @ 3A laboratory power supply and cable | 24V for QC board, 12V for cooling fans |
+| 203 | 48V @ 12.5A power supply | For PTC device under test (DUT) |
+| 204 | Oscilloscope, at least 2 channels and probes, at least 100MHz bandwidth | For probing QC board test points (and PTC test points if required for debugging) |
+| 205 | Digital volt meter (DVM) | For probing test points |
+| 206 | Linux machine | For test scripts, timing server, HWDB |
+| 207 | 3x Ethernet cables | For QC board, PTC GbE connection, and EtherCAT connection |
+| 208 | GbE media converter | 10GTek A7S2-33-1GX1GT-SFP/GT3 for PTC front panel to network switch |
+| 209 | GbE network switch | For connecting PTC and QC board to Linux machine |
+| 210 | Windows machine | For running Beckhoff TwinCAT (EtherCAT software) |
+| 211 | 10/100 media converter | tp-link MC100CM Fast Ethernet Media Converter, for connecting PTC front panel to Windows machine |
+| 212 | 3x SFP modules | 10Gtek ASF85-24-X2-D (GbE), SFP-100FX-31-I, FS P/N 12713 (EtherCAT), SFP1G-SX-85, FS P/N 11774 (timing) |
+| 213 | 3x fibers | 1m LC to LC OM1, FS P/N 42095 (GbE and timing), 1m LC to SC OM3, FS P/N 41751 (EtherCAT) |
+| 214 | SD card writer | For preparing bootable SD cards for PTC |
+| 215 | Microcontroller programming pod | Infineon XMD Link, for XMC-4300 |
+
+**Quick summary:** visual inspection tools (camera, microscope, scanner); QC station (board, 24V/48V supplies, scope, DVM); network (switch, media converters, cables, SFPs, fibers); Linux and Windows PCs; SD writer; XMC Link; PPE per Table 3 in section 1.
 
 If anything is missing, do not start the test.
 
@@ -583,6 +616,24 @@ init 0
    - tested PTC serial numbers
    - result (PASS/FAIL/other)
    - comments/notes
+
+**End-of-shift checklist table** (same columns as official v1.1 PDF — fill in or copy to your lab log):
+
+| Field | Value |
+| --- | --- |
+| Date | |
+| Time | |
+| Tester's Name | |
+
+| Tested PTC SN | Result (PASS/FAIL/Other) | Comments |
+| --- | --- | --- |
+| | | |
+| | | |
+| | | |
+| | | |
+| | | |
+
+**Notes:** (optional)
 
 ---
 
