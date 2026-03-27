@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PTC QC Procedure - Beginner-Friendly</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --paper: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #d1d5db;
+      --cmd-bg: #0f172a;
+      --cmd-ink: #e2e8f0;
+      --btn: #2563eb;
+      --btn-hover: #1d4ed8;
+      --good: #065f46;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.55;
+    }
+    .page {
+      max-width: 980px;
+      margin: 20px auto 40px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      padding: 32px 40px;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 18px;
+    }
+    h1, h2, h3 { line-height: 1.25; }
+    h1 { margin-top: 0; font-size: 2rem; }
+    h2 {
+      margin-top: 28px;
+      padding-top: 10px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 1.35rem;
+    }
+    h3 { margin-top: 20px; font-size: 1.1rem; }
+    p code, li code {
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.94em;
+    }
+    .copy-tip {
+      padding: 10px 12px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      color: #1e3a8a;
+      border-radius: 8px;
+      margin: 12px 0 20px;
+      font-size: 0.95rem;
+    }
+    .cmd-block, .code-block {
+      position: relative;
+      margin: 14px 0 18px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #1f2937;
+    }
+    .cmd-block pre, .code-block pre {
+      margin: 0;
+      padding: 14px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.9rem;
+      white-space: pre;
+    }
+    .cmd-block pre {
+      background: var(--cmd-bg);
+      color: var(--cmd-ink);
+    }
+    .code-block pre {
+      background: #111827;
+      color: #d1d5db;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--btn);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: var(--btn-hover); }
+    .copy-btn.copied {
+      background: var(--good);
+    }
+    .cmd-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      background: #0b1220;
+      border-bottom: 1px solid #1f2937;
+    }
+    .cmd-toolbar-title {
+      color: #9ca3af;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .copy-block-btn {
+      position: static;
+      padding: 4px 9px;
+      font-size: 0.75rem;
+    }
+    .cmd-lines {
+      background: #f9fafb;
+      border-top: 1px solid #d1d5db;
+      padding: 8px;
+    }
+    .cmd-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 6px 8px;
+      margin-bottom: 7px;
+      background: #ffffff;
+    }
+    .cmd-line:last-child { margin-bottom: 0; }
+    .cmd-text {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.85rem;
+      color: #0f172a;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .copy-line-btn {
+      border: none;
+      border-radius: 6px;
+      background: #1d4ed8;
+      color: #fff;
+      padding: 5px 9px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .copy-line-btn:hover { background: #1e40af; }
+    .copy-line-btn.copied { background: var(--good); }
+    .cmd-note {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin: 2px 0 8px;
+      padding: 2px 4px;
+    }
+    hr { border: none; border-top: 1px solid #e5e7eb; margin: 20px 0; }
+    @media print {
+      body { background: #fff; }
+      .page {
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        max-width: none;
+        padding: 0;
+      }
+      .copy-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="meta">Generated from novice markdown on 2026-03-27 12:53</div>
+    <div class="copy-tip"><strong>Tip:</strong> Click <strong>Copy</strong> on any command block, then paste into Terminal.</div>
+    <h1>PTC Quality Control Procedure (Beginner-Friendly)</h1>
+<p>Version: v1.1 novice rewrite<br />
+Based on: <code>PTC_QC_Procedures_v1.1.pdf</code><br />
+Audience: First-time tester with no Linux command-line experience</p>
+<hr />
+<h2>1) Before You Start</h2>
+<p>This guide explains exactly how to test a PTC board from start to finish.</p>
+<p>If you are new to Linux or lab test work, do not worry. Every command and action is written step by step.</p>
+<h3>What this procedure does</h3>
+<p>You will:</p>
+<ul>
+<li>inspect delivered parts</li>
+<li>set up the QC test station</li>
+<li>run manual tests</li>
+<li>run script-based tests</li>
+<li>complete mechanical assembly</li>
+<li>record PASS/FAIL in HWDB</li>
+</ul>
+<h3>Safety and handling rules (always apply)</h3>
+<ul>
+<li>Wear PPE: long pants, long sleeves, closed-toe shoes, ESD-safe gloves, antistatic wrist strap.</li>
+<li>Handle boards only at edges.</li>
+<li>Never force connectors, SD cards, or modules.</li>
+<li>Turn power <strong>off</strong> before connecting/disconnecting cables unless a step explicitly says otherwise.</li>
+<li>If expected behavior is missing (LEDs, current draw, boot messages), stop and ask a UPenn electronics engineer.</li>
+</ul>
+<hr />
+<h2>2) Quick Vocabulary (Plain Language)</h2>
+<ul>
+<li><strong>DUT</strong>: Device Under Test (the PTC board you are testing)</li>
+<li><strong>QC board</strong>: the test fixture board used to test DUT</li>
+<li><strong>SoM</strong>: System on Module (Enclustra module installed on DUT)</li>
+<li><strong>HWDB</strong>: hardware database where serial numbers and pass/fail results are recorded</li>
+<li><strong>LED</strong>: small indicator light on the board/front panel</li>
+<li><strong>DVM</strong>: digital volt meter</li>
+<li><strong>SFP</strong>: optical transceiver module used for fiber links</li>
+<li><strong>EtherCAT / GbE / timing</strong>: communication interfaces used by the DUT</li>
+<li><strong>SSH</strong>: remote terminal login to another machine</li>
+<li><strong>Serial terminal</strong>: direct text connection to board through USB serial</li>
+</ul>
+<hr />
+<h2>3) Linux Basics You Need for This Procedure</h2>
+<p>You only need a few commands.</p>
+<h3>Open a terminal</h3>
+<p>On the Linux machine, open Terminal.</p>
+<h3>Commands used in this guide</h3>
+<ul>
+<li><code>cd &lt;folder&gt;</code>: move to a folder</li>
+<li><code>ls</code>: list files in current folder</li>
+<li><code>pwd</code>: show current folder</li>
+<li><code>ping &lt;ip-address&gt;</code>: test network communication</li>
+<li><code>ssh root@&lt;ip-address&gt;</code>: connect to board over network</li>
+<li><code>exit</code>: disconnect from SSH session</li>
+</ul>
+<h3>How to run commands safely</h3>
+<ul>
+<li>Copy/paste commands exactly.</li>
+<li>Press Enter after each command.</li>
+<li>Wait for output before moving to the next command.</li>
+<li>If command says &quot;permission denied&quot;, ask lab lead before using <code>sudo</code>.</li>
+</ul>
+<hr />
+<h2>4) Equipment Checklist</h2>
+<p>Confirm all items are present before testing:</p>
+<ul>
+<li>Visual inspection tools: camera, microscope, barcode/QR scanner</li>
+<li>QC station hardware: QC board, power supplies (24V and 48V), oscilloscope, DVM</li>
+<li>Network hardware: switch, media converters, Ethernet cables, SFP modules, fibers</li>
+<li>Computers: Linux machine and Windows machine</li>
+<li>Programming tools: SD writer, Infineon XMC Link</li>
+<li>PPE: required ESD-safe attire and wrist strap</li>
+</ul>
+<p>If anything is missing, do not start the test.</p>
+<hr />
+<h2>5) Workflow Overview</h2>
+<p>You will complete these phases in order:</p>
+<ol>
+<li>Reception checkout (visual checks and vendor paperwork)</li>
+<li>Test stand preparation (software, timing setup, DUT prep)</li>
+<li>Manual QC tests (power/voltage/frequency/boot checks)</li>
+<li>Semi-automated tests (script outputs and interface checks)</li>
+<li>Mechanical install (heatsinks, front panel, packing)</li>
+<li>End-of-shift shutdown and log update</li>
+</ol>
+<hr />
+<h2>6) Phase A - Reception Checkout</h2>
+<h3>A1. Front panel visual inspection</h3>
+<ol>
+<li>Count received panels; compare to purchase order.</li>
+<li>Inspect 10% sample under microscope:
+<ul>
+<li>scratches</li>
+<li>cleanliness</li>
+<li>damage</li>
+<li>missing hardware (for example thumb screws)</li>
+</ul>
+</li>
+<li>Check dimensions/hole locations on 10% sample against drawings.</li>
+<li>If any panel fails:
+<ul>
+<li>place in box labeled <code>Rejected front panels</code></li>
+<li>report to UPenn electronics engineer</li>
+</ul>
+</li>
+</ol>
+<p>Acceptance: PASS/FAIL.</p>
+<h3>A2. Bare PCB visual inspection</h3>
+<ol>
+<li>Count received PCBs; compare to purchase order.</li>
+<li>Review vendor quality certificates and fill designated Google form.</li>
+<li>For sample PCBs:
+<ul>
+<li>inspect under microscope</li>
+<li>compare against reference PCB</li>
+<li>record notes for defects</li>
+</ul>
+</li>
+<li>Export completed form from GoogleDoc as:
+<ul>
+<li>Excel file</li>
+<li>PDF file</li>
+</ul>
+</li>
+<li>Upload both files plus certificate/report copies to HWDB.</li>
+<li>Label sample board sticker with:
+<ul>
+<li>PCB serial number</li>
+<li>production batch</li>
+<li>inspection date</li>
+<li>inspector name</li>
+</ul>
+</li>
+<li>Segregate failed samples into <code>Rejected bare PCBs</code> and report.</li>
+</ol>
+<p>Acceptance: PASS/FAIL.</p>
+<h3>A3. Assembled PCB visual inspection</h3>
+<ol>
+<li>Count boards.</li>
+<li>Review certificates and complete form.</li>
+<li>For each assembled board:
+<ul>
+<li>take high-resolution photos (front and back)</li>
+<li>microscope inspection checklist:
+<ul>
+<li>missing solder joints</li>
+<li>solder bridges</li>
+<li>wrong/missing parts</li>
+<li>contamination</li>
+<li>wrong part orientation</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>For any defect:
+<ul>
+<li>write defect note</li>
+<li>take close-up photo</li>
+<li>tag board <code>Visual Inspection Failed</code></li>
+<li>move to <code>Rejected Assembled PCBs</code> box</li>
+</ul>
+</li>
+<li>Scan serial into HWDB for every board (pass or fail).</li>
+<li>Upload completed forms (Excel + PDF) to HWDB.</li>
+</ol>
+<p>Acceptance: PASS/FAIL.</p>
+<hr />
+<h2>7) Phase B - QC Test Stand Preparation</h2>
+<blockquote>
+<p>Tip for new users: this section includes Linux commands. Run them exactly as shown.</p>
+</blockquote>
+<h3>B1. DUNE-DAQ setup (Linux)</h3>
+<h4>One-time setup</h4>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">cd &lt;your-setup-directory&gt;
+source /cvmfs/dunedaq.opensciencegrid.org/setup_dunedaq.sh
+setup_dbt dunedaq-v3.1.1
+dbt-create -c -n N22-11-08 dune-daq-timing-dcsk
+cd dune-daq-timing-dcsk/sourcecode
+git clone https://github.com/DUNE-DAQ/timing.git
+cd timing
+git checkout tags/&quot;nocdr_integration/b0&quot;
+cd ../../
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">cd &lt;your-setup-directory&gt;</code><button class="copy-line-btn" type="button" data-cmd="cd &lt;your-setup-directory&gt;">Copy</button></div><div class="cmd-line"><code class="cmd-text">source /cvmfs/dunedaq.opensciencegrid.org/setup_dunedaq.sh</code><button class="copy-line-btn" type="button" data-cmd="source /cvmfs/dunedaq.opensciencegrid.org/setup_dunedaq.sh">Copy</button></div><div class="cmd-line"><code class="cmd-text">setup_dbt dunedaq-v3.1.1</code><button class="copy-line-btn" type="button" data-cmd="setup_dbt dunedaq-v3.1.1">Copy</button></div><div class="cmd-line"><code class="cmd-text">dbt-create -c -n N22-11-08 dune-daq-timing-dcsk</code><button class="copy-line-btn" type="button" data-cmd="dbt-create -c -n N22-11-08 dune-daq-timing-dcsk">Copy</button></div><div class="cmd-line"><code class="cmd-text">cd dune-daq-timing-dcsk/sourcecode</code><button class="copy-line-btn" type="button" data-cmd="cd dune-daq-timing-dcsk/sourcecode">Copy</button></div><div class="cmd-line"><code class="cmd-text">git clone https://github.com/DUNE-DAQ/timing.git</code><button class="copy-line-btn" type="button" data-cmd="git clone https://github.com/DUNE-DAQ/timing.git">Copy</button></div><div class="cmd-line"><code class="cmd-text">cd timing</code><button class="copy-line-btn" type="button" data-cmd="cd timing">Copy</button></div><div class="cmd-line"><code class="cmd-text">git checkout tags/&quot;nocdr_integration/b0&quot;</code><button class="copy-line-btn" type="button" data-cmd="git checkout tags/&quot;nocdr_integration/b0&quot;">Copy</button></div><div class="cmd-line"><code class="cmd-text">cd ../../</code><button class="copy-line-btn" type="button" data-cmd="cd ../../">Copy</button></div></div></div>
+<h4>Every reboot</h4>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">cd &lt;your-setup-directory&gt;/dune-daq-timing-dcsk
+source /cvmfs/dunedaq.opensciencegrid.org/setup_dunedaq.sh
+setup_dbt dunedaq-v3.1.1
+source dbt-env.sh
+dbt-workarea-env
+dbt-build
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">cd &lt;your-setup-directory&gt;/dune-daq-timing-dcsk</code><button class="copy-line-btn" type="button" data-cmd="cd &lt;your-setup-directory&gt;/dune-daq-timing-dcsk">Copy</button></div><div class="cmd-line"><code class="cmd-text">source /cvmfs/dunedaq.opensciencegrid.org/setup_dunedaq.sh</code><button class="copy-line-btn" type="button" data-cmd="source /cvmfs/dunedaq.opensciencegrid.org/setup_dunedaq.sh">Copy</button></div><div class="cmd-line"><code class="cmd-text">setup_dbt dunedaq-v3.1.1</code><button class="copy-line-btn" type="button" data-cmd="setup_dbt dunedaq-v3.1.1">Copy</button></div><div class="cmd-line"><code class="cmd-text">source dbt-env.sh</code><button class="copy-line-btn" type="button" data-cmd="source dbt-env.sh">Copy</button></div><div class="cmd-line"><code class="cmd-text">dbt-workarea-env</code><button class="copy-line-btn" type="button" data-cmd="dbt-workarea-env">Copy</button></div><div class="cmd-line"><code class="cmd-text">dbt-build</code><button class="copy-line-btn" type="button" data-cmd="dbt-build">Copy</button></div></div></div>
+<h3>B2. Create <code>local.xml</code> (one time)</h3>
+<p>Create file <code>local.xml</code> in <code>dune-daq-timing-dcsk</code> with:</p>
+<div class="code-block"><button class="copy-btn" type="button">Copy</button><pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;connections&gt;
+  &lt;connection id=&quot;MST_FMC&quot; uri=&quot;ipbusudp-2.0://192.168.200.16:50001&quot;
+    address_table=&quot;file://sourcecode/timing/config/etc/addrtab/v7xx/master_fmc/top.xml&quot; /&gt;
+  &lt;connection id=&quot;EPT_0&quot; uri=&quot;ipbusudp-2.0://192.168.200.16:50001&quot;
+    address_table=&quot;file://sourcecode/timing/config/etc/addrtab/v7xx/endpoint_fmc/top.xml&quot; /&gt;
+&lt;/connections&gt;
+</code></pre></div>
+<h3>B3. Timing master setup</h3>
+<ol>
+<li>Download the specified <code>.tgz</code> timing package from project source.</li>
+<li>Extract it fully.</li>
+<li>In Vivado Hardware Manager:
+<ul>
+<li>auto-connect JTAG</li>
+<li>select FPGA</li>
+<li>program using the extracted <code>.bit</code> file</li>
+</ul>
+</li>
+<li>Connect serial with minicom (19200, 8N1, no flow control).</li>
+<li>At minicom prompt:
+<ul>
+<li>type <code>write</code> then Enter</li>
+<li>enter <code>0xc0a8c810</code> then Enter (sets IP to <code>192.168.200.16</code>)</li>
+</ul>
+</li>
+<li>Confirm network reachability:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">ping 192.168.200.16
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">ping 192.168.200.16</code><button class="copy-line-btn" type="button" data-cmd="ping 192.168.200.16">Copy</button></div></div></div>
+<ol start="7">
+<li>Start timing output on Linux machine:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">dtsbutler -c local.xml io MST_FMC reset
+dtsbutler -c local.xml mst MST_FMC synctime
+dtsbutler -c local.xml io EPT_0 reset
+dtsbutler -c local.xml mst MST_FMC control-timestamp-broadcast
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">dtsbutler -c local.xml io MST_FMC reset</code><button class="copy-line-btn" type="button" data-cmd="dtsbutler -c local.xml io MST_FMC reset">Copy</button></div><div class="cmd-line"><code class="cmd-text">dtsbutler -c local.xml mst MST_FMC synctime</code><button class="copy-line-btn" type="button" data-cmd="dtsbutler -c local.xml mst MST_FMC synctime">Copy</button></div><div class="cmd-line"><code class="cmd-text">dtsbutler -c local.xml io EPT_0 reset</code><button class="copy-line-btn" type="button" data-cmd="dtsbutler -c local.xml io EPT_0 reset">Copy</button></div><div class="cmd-line"><code class="cmd-text">dtsbutler -c local.xml mst MST_FMC control-timestamp-broadcast</code><button class="copy-line-btn" type="button" data-cmd="dtsbutler -c local.xml mst MST_FMC control-timestamp-broadcast">Copy</button></div></div></div>
+<h3>B4. Prepare DUT hardware</h3>
+<ol>
+<li>Ensure all required cables are connected with power OFF.</li>
+<li>Insert DUT into QC board guide rails and seat connectors evenly.</li>
+<li>Power on QC board (24V supply):
+<ul>
+<li>expected current about 400 mA</li>
+<li>Enclustra amber LED should blink after a few seconds</li>
+</ul>
+</li>
+<li>Confirm QC board network comes up at <code>192.168.200.12</code>.</li>
+<li>Optional test:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">ping 192.168.200.12
+ssh root@192.168.200.12
+exit
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">ping 192.168.200.12</code><button class="copy-line-btn" type="button" data-cmd="ping 192.168.200.12">Copy</button></div><div class="cmd-line"><code class="cmd-text">ssh root@192.168.200.12</code><button class="copy-line-btn" type="button" data-cmd="ssh root@192.168.200.12">Copy</button></div><div class="cmd-line"><code class="cmd-text">exit</code><button class="copy-line-btn" type="button" data-cmd="exit">Copy</button></div></div></div>
+<ol start="6">
+<li>Turn on QC heatsink fans (12V channel).</li>
+</ol>
+<h3>B5. Prepare bootable SD card for DUT</h3>
+<ol>
+<li>Create partitions:
+<ul>
+<li><code>BOOT</code> FAT32, 256 MB</li>
+<li><code>ROOT</code> EXT4, remainder</li>
+</ul>
+</li>
+<li>Copy to <code>BOOT</code>: <code>BOOT.bin</code>, <code>image.ub</code>, <code>boot.scr</code></li>
+<li>Copy <code>rootfs.tar.gz</code> to <code>ROOT</code>, then extract it there.</li>
+<li>Insert SD card into DUT (do not force).</li>
+</ol>
+<h3>B6. Install jumpers and scan serial</h3>
+<p>Set jumpers:</p>
+<ul>
+<li><code>JT11</code> -&gt; position 2-3</li>
+<li><code>JT9</code> -&gt; position 2-3</li>
+<li><code>JT10</code> -&gt; position 2-3</li>
+<li>all other 2/3-position headers -&gt; no jumper</li>
+</ul>
+<p>Remove protective film from <code>SWT1</code> and <code>SWT2</code>.</p>
+<p>Scan DUT serial number into HWDB.</p>
+<p>Acceptance: PASS/FAIL with serial logged.</p>
+<hr />
+<h2>8) Phase C - Manual QC Tests</h2>
+<h3>C1. Power-up test (no SoM)</h3>
+<ol>
+<li>Turn on 48V supply.</li>
+<li>Confirm DUT current is <strong>less than 100 mA</strong>.</li>
+<li>Measure <code>VP12 LOCAL</code> with DVM: <strong>12.00 to 12.35 V</strong>.</li>
+<li>Confirm front LED <code>12V LOCAL</code> is ON.</li>
+</ol>
+<p>Acceptance:</p>
+<ul>
+<li>current &lt;= 100 mA</li>
+<li>voltage in range</li>
+<li>LED PASS/FAIL</li>
+</ul>
+<h3>C2. DC-DC converter checks</h3>
+<p>For each of the 6 converters:</p>
+<ol>
+<li>Set <code>SWT1</code> for that converter.</li>
+<li>Measure corresponding <code>RIPPLE x</code> test point: <strong>12.00 to 12.35 V</strong>.</li>
+<li>Scope setup:
+<ul>
+<li>AC coupling</li>
+<li>20 mV/div</li>
+<li>2 us/div</li>
+</ul>
+</li>
+<li>Confirm switching period <strong>1.0 to 1.1 us</strong> (about 917 kHz to 1 MHz).</li>
+<li>Confirm matching <code>WIB x</code> front LED is ON.</li>
+</ol>
+<p>After all converters:</p>
+<ul>
+<li>set all DIP switches OFF</li>
+<li>power off DUT</li>
+<li>disconnect cables</li>
+<li>remove DUT safely</li>
+<li>reinstall clear QC plate</li>
+</ul>
+<h3>C3. SoM tests</h3>
+<ol>
+<li>Scan SoM QR and log serial in HWDB.</li>
+<li>Insert SoM carefully with correct orientation.</li>
+<li>Reinstall DUT in QC stand.</li>
+</ol>
+<p>Boot checks:</p>
+<ol>
+<li>Turn on 48V.</li>
+<li>Expected startup current about 100-200 mA initially.</li>
+<li>Enclustra amber LED should blink.</li>
+<li>Front panel LEDs that must be ON:
+<ul>
+<li><code>12V LOCAL</code></li>
+<li><code>PG</code></li>
+<li><code>FPGA DONE</code></li>
+</ul>
+</li>
+<li>Confirm serial access (115200, 8N1, login <code>root</code>).</li>
+</ol>
+<p>Repeat boot reliability:</p>
+<ul>
+<li>run <code>init 0</code></li>
+<li>wait for shutdown completion</li>
+<li>power off 60 seconds</li>
+<li>power on again</li>
+<li>repeat total of 5 boot cycles</li>
+</ul>
+<p>Acceptance: PASS/FAIL.</p>
+<hr />
+<h2>9) Phase D - Semi-Automated QC Tests</h2>
+<h3>D1. DC-DC load test</h3>
+<ol>
+<li>Boot DUT while connected to powered QC board.</li>
+<li>On DUT, enable converter 0:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">python3 power_on_wib.py 0 on
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">python3 power_on_wib.py 0 on</code><button class="copy-line-btn" type="button" data-cmd="python3 power_on_wib.py 0 on">Copy</button></div></div></div>
+<ol start="3">
+<li>On QC board, set PWM:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">poke 0x80020038 0x316
+poke 0x80020038 0x216
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">poke 0x80020038 0x316</code><button class="copy-line-btn" type="button" data-cmd="poke 0x80020038 0x316">Copy</button></div><div class="cmd-line"><code class="cmd-text">poke 0x80020038 0x216</code><button class="copy-line-btn" type="button" data-cmd="poke 0x80020038 0x216">Copy</button></div></div></div>
+<ol start="4">
+<li>Confirm expected load current (on 48V supply, equivalent to DUT side load):</li>
+</ol>
+<ul>
+<li>~1.5 A (+/-100 mA) at 25%</li>
+<li>~3.0 A (+/-100 mA) at 50%</li>
+<li>~4.5 A (+/-100 mA) at 75%</li>
+<li>~6.0 A (+/-100 mA) near full load</li>
+</ul>
+<ol start="5">
+<li>At highest load, measure ripple at <code>RIPPLE 0</code>:</li>
+</ol>
+<ul>
+<li>scope 200 mV/div, 200 ns/div, AC coupling</li>
+<li>acceptance: within +/-200 mV</li>
+</ul>
+<ol start="6">
+<li>Repeat for converters 1-5 using their respective addresses.</li>
+</ol>
+<h3>D2. I2C sensor tests</h3>
+<ol>
+<li>On DUT, enable all 6 converters.</li>
+<li>Run sensor + EtherCAT test script with logfile name:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">python3 ecat_test_1b.py &lt;logfile-name&gt;.txt
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">python3 ecat_test_1b.py &lt;logfile-name&gt;.txt</code><button class="copy-line-btn" type="button" data-cmd="python3 ecat_test_1b.py &lt;logfile-name&gt;.txt">Copy</button></div></div></div>
+<ol start="3">
+<li>Record outputs in HWDB (manual entry or parser process when available).</li>
+</ol>
+<p>Acceptance ranges:</p>
+<ul>
+<li>main 12V outputs: 12.00 to 12.35 V</li>
+<li>converter current (25% load): 1.5 A +/-100 mA</li>
+<li>SoM current: &lt;= 2 A</li>
+<li>2.5V rail: 2.4 to 2.6 V</li>
+<li>3.3V rail: 3.2 to 3.4 V</li>
+<li>local rail currents: &lt;= 2 A</li>
+<li>8 temperature sensors: ambient +/-5 C</li>
+</ul>
+<p>Extended checks:</p>
+<ul>
+<li>run alert assertion script</li>
+<li>verify front <code>OVER TEMP</code> LED turns RED when alert asserted</li>
+</ul>
+<p>Acceptance: PASS/FAIL.</p>
+<h3>D3. Addressing tests</h3>
+<ol>
+<li>Remove clear QC plate.</li>
+<li>Toggle each of 8 crate address DIP switches ON one at a time.</li>
+<li>Confirm corresponding address indicator LED.</li>
+<li>Reinstall clear plate.</li>
+<li>Run EEPROM script and log unique serial ID.</li>
+</ol>
+<p>Acceptance: PASS/FAIL with serial logged.</p>
+<h3>D4. Microcontroller tests</h3>
+<ol>
+<li>Confirm required tools are installed on Windows:
+<ul>
+<li>TwinCAT3</li>
+<li>DAVE (v4.1.4 or higher)</li>
+<li>SSC tool (v5.12)</li>
+</ul>
+</li>
+<li>Copy ESI XML to:
+<code>C:\TwinCAT\3.1\Config\Io\EtherCAT</code></li>
+<li>Connect EtherCAT fiber path.</li>
+<li>Program MCU:
+<ul>
+<li>JTAG programming via DAVE Debug</li>
+<li>in-situ programming via FPGA (<code>openocd ...</code>)</li>
+</ul>
+</li>
+<li>In TwinCAT:
+<ul>
+<li>select correct adapter</li>
+<li>scan</li>
+<li>confirm configuration matched</li>
+<li>go Online</li>
+<li>enable Free-Run</li>
+<li>verify no lost frames and stable counters</li>
+</ul>
+</li>
+</ol>
+<p>Check LEDs:</p>
+<ul>
+<li>front <code>LINK</code> LED</li>
+<li>front <code>ECAT RUN</code> LED</li>
+<li>debug LED states as specified</li>
+</ul>
+<p>Acceptance: PASS/FAIL.</p>
+<h3>D5. Timing tests</h3>
+<p>Run DUT timing lock sequence:</p>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">python3 setup_timing.py
+poke 0x80020004 0x00010400
+peek 0x80020104
+poke 0x80020004 0x00010000
+peek 0x80020104
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">python3 setup_timing.py</code><button class="copy-line-btn" type="button" data-cmd="python3 setup_timing.py">Copy</button></div><div class="cmd-line"><code class="cmd-text">poke 0x80020004 0x00010400</code><button class="copy-line-btn" type="button" data-cmd="poke 0x80020004 0x00010400">Copy</button></div><div class="cmd-line"><code class="cmd-text">peek 0x80020104</code><button class="copy-line-btn" type="button" data-cmd="peek 0x80020104">Copy</button></div><div class="cmd-line"><code class="cmd-text">poke 0x80020004 0x00010000</code><button class="copy-line-btn" type="button" data-cmd="poke 0x80020004 0x00010000">Copy</button></div><div class="cmd-line"><code class="cmd-text">peek 0x80020104</code><button class="copy-line-btn" type="button" data-cmd="peek 0x80020104">Copy</button></div></div></div>
+<p>Confirm expected status and front LEDs (<code>LINK</code>, <code>RX</code>).</p>
+<p>Round-trip timing check:</p>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">dtsbutler -c local.xml mst MST_FMC align measure-delay 0
+dtsbutler -c local.xml mst MST_FMC align toggle-tx 0 --on
+dtsbutler -c local.xml mst MST_FMC align toggle-tx 0 --off
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">dtsbutler -c local.xml mst MST_FMC align measure-delay 0</code><button class="copy-line-btn" type="button" data-cmd="dtsbutler -c local.xml mst MST_FMC align measure-delay 0">Copy</button></div><div class="cmd-line"><code class="cmd-text">dtsbutler -c local.xml mst MST_FMC align toggle-tx 0 --on</code><button class="copy-line-btn" type="button" data-cmd="dtsbutler -c local.xml mst MST_FMC align toggle-tx 0 --on">Copy</button></div><div class="cmd-line"><code class="cmd-text">dtsbutler -c local.xml mst MST_FMC align toggle-tx 0 --off</code><button class="copy-line-btn" type="button" data-cmd="dtsbutler -c local.xml mst MST_FMC align toggle-tx 0 --off">Copy</button></div></div></div>
+<p>Confirm RTT value is present and front <code>TX</code> LED responds.</p>
+<p>Acceptance: PASS/FAIL.</p>
+<h3>D6. Ethernet tests</h3>
+<ol>
+<li>Confirm front <code>LINK</code> LED ON.</li>
+<li>Ping DUT at <code>192.168.200.10</code> from Linux machine:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">ping 192.168.200.10
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">ping 192.168.200.10</code><button class="copy-line-btn" type="button" data-cmd="ping 192.168.200.10">Copy</button></div></div></div>
+<ol start="3">
+<li>SSH to DUT:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">ssh root@192.168.200.10
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">ssh root@192.168.200.10</code><button class="copy-line-btn" type="button" data-cmd="ssh root@192.168.200.10">Copy</button></div></div></div>
+<ol start="4">
+<li>Run throughput test according to project method (target &gt;12.5 MB/s).</li>
+<li>Verify AUX LED toggle method if register control is defined.</li>
+</ol>
+<p>Acceptance: PASS/FAIL.</p>
+<hr />
+<h2>10) Phase E - Mechanical Install and Packing</h2>
+<h3>E1. Heatsink install</h3>
+<ol>
+<li>Clean top of each LTM-8064 with alcohol swab.</li>
+<li>Apply TIM adhesive side 1 to converter.</li>
+<li>Remove adhesive side 2 and apply heatsink with even pressure.</li>
+</ol>
+<h3>E2. Front panel install</h3>
+<ol>
+<li>Insert light pipes and secure with rubber grommets.</li>
+<li>Attach front panel at both L-bracket locations.</li>
+</ol>
+<h3>E3. Pack for shipment</h3>
+<ol>
+<li>Place tested board in ESD bag.</li>
+<li>Store in secure shipment staging area.</li>
+<li>Confirm final DUT test result entered in HWDB.</li>
+</ol>
+<p>Acceptance: PASS/FAIL.</p>
+<hr />
+<h2>11) End-of-Shift Shutdown</h2>
+<ol>
+<li>Remove any DUT still installed.</li>
+<li>On QC board, run:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">init 0
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">init 0</code><button class="copy-line-btn" type="button" data-cmd="init 0">Copy</button></div></div></div>
+<ol start="3">
+<li>Wait for shutdown-complete message.</li>
+<li>Power off 24V QC board supply.</li>
+<li>Power off 12V fan supply.</li>
+<li>Complete shift log:
+<ul>
+<li>date/time</li>
+<li>tester name</li>
+<li>tested PTC serial numbers</li>
+<li>result (PASS/FAIL/other)</li>
+<li>comments/notes</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2>12) Troubleshooting for Beginners</h2>
+<h3>Board does not respond to ping</h3>
+<ol>
+<li>Check cable seating on both ends.</li>
+<li>Confirm board is powered and LEDs indicate boot.</li>
+<li>Confirm IP address is correct for the target board.</li>
+<li>Try ping again:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">ping &lt;ip-address&gt;
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">ping &lt;ip-address&gt;</code><button class="copy-line-btn" type="button" data-cmd="ping &lt;ip-address&gt;">Copy</button></div></div></div>
+<ol start="5">
+<li>If still failing, use serial console to verify board boot status.</li>
+</ol>
+<h3>SSH connection fails</h3>
+<ol>
+<li>Confirm ping works first.</li>
+<li>Use correct username:</li>
+</ol>
+<div class="cmd-block"><div class="cmd-toolbar"><span class="cmd-toolbar-title">Command sequence</span><button class="copy-btn copy-block-btn" type="button">Copy block</button></div><pre><code class="language-bash">ssh root@&lt;ip-address&gt;
+</code></pre><div class="cmd-lines"><div class="cmd-line"><code class="cmd-text">ssh root@&lt;ip-address&gt;</code><button class="copy-line-btn" type="button" data-cmd="ssh root@&lt;ip-address&gt;">Copy</button></div></div></div>
+<ol start="3">
+<li>If refused or timeout, verify service has started and board finished booting.</li>
+</ol>
+<h3>Serial terminal not showing output</h3>
+<ol>
+<li>Recheck baud and 8N1 settings.</li>
+<li>Confirm correct <code>/dev/ttyUSBx</code> device.</li>
+<li>Unplug/replug USB cable and reconnect terminal.</li>
+</ol>
+<h3>Current or voltage out of range</h3>
+<ol>
+<li>Stop test for that DUT.</li>
+<li>Recheck jumper settings and DIP states.</li>
+<li>Recheck probe location.</li>
+<li>If still out of range, mark FAIL and escalate to engineer.</li>
+</ol>
+<hr />
+<h2>13) Required Records in HWDB</h2>
+<p>For each DUT, make sure these are saved:</p>
+<ul>
+<li>DUT serial number</li>
+<li>SoM serial number (if applicable)</li>
+<li>visual inspection results (pass/fail and notes)</li>
+<li>photos (front/back, plus any defect close-ups)</li>
+<li>script logs or parsed outputs</li>
+<li>final overall result (PASS/FAIL)</li>
+</ul>
+<hr />
+<h2>14) Final Notes</h2>
+<ul>
+<li>Follow steps in order.</li>
+<li>Do not skip acceptance checks.</li>
+<li>If uncertain at any step, pause and ask for help before continuing.</li>
+</ul>
+<p>This beginner version is intentionally explicit so first-time users can run the procedure consistently and safely.</p>
+
+  </main>
+  <script>
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const codeEl = btn.parentElement.querySelector('code');
+        const text = codeEl ? codeEl.textContent : '';
+        try {
+          await navigator.clipboard.writeText(text);
+          const old = btn.textContent;
+          btn.textContent = 'Copied';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = old;
+            btn.classList.remove('copied');
+          }, 1200);
+        } catch (_err) {
+          btn.textContent = 'Copy failed';
+          setTimeout(() => btn.textContent = 'Copy', 1200);
+        }
+      });
+    });
+    document.querySelectorAll('.copy-line-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const text = btn.getAttribute('data-cmd') || '';
+        try {
+          await navigator.clipboard.writeText(text);
+          const old = btn.textContent;
+          btn.textContent = 'Copied';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = old;
+            btn.classList.remove('copied');
+          }, 1200);
+        } catch (_err) {
+          btn.textContent = 'Copy failed';
+          setTimeout(() => btn.textContent = 'Copy', 1200);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
